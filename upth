@@ -1,23 +1,28 @@
-# /bin/bash
+# !/bin/bash
 
 UPLINK=${HOME}/Library/Application\ Support/Uplink
 GRAPHICS=${UPLINK}/mods/graphics
 
-check_uplink_folder() {
+# {{{ Checks
+
+function check_uplink_folder() {
   if [ ! -d "$UPLINK"  ];
     then echo "Uplink folder does not exist";
     exit 1;
   fi
 }
 
-check_mods_folder() {
+function check_mods_folder() {
   if [ ! -d "$GRAPHICS"  ];
     then echo "Graphics folder does not exist";
     exit 1;
   fi
 }
 
+# }}}
+
 # {{{ Ask
+
 ask() {
     # http://djm.me/ask
     local prompt default REPLY
@@ -54,7 +59,10 @@ ask() {
 
     done
 }
+
 # }}}
+
+# {{{ Install
 
 install_theme() {
   if [ -f "$GRAPHICS/theme.txt" ]; then
@@ -74,10 +82,14 @@ silent_install() {
   cp -nR $loc /Users/palmund/Library/Application\ Support/Uplink/mods/graphics
 }
 
+# }}}
+
 confirm_location() {
   echo "Install from here: $1"
   ask "Confirm" Y; # Default to YES
 }
+
+# {{{ Restore
 
 restore_theme() {
   paths=$(pwd)/paths.txt
@@ -93,6 +105,10 @@ restore_theme() {
   echo "Default theme restored!"
 }
 
+# }}}
+
+# {{{ Replace
+
 replace_theme() {
   if [ ! -f "$GRAPHICS/theme.txt" ]; then
     echo "No theme installed to replace. Use install instead.";
@@ -104,6 +120,8 @@ replace_theme() {
   fi
 }
 
+# }}}
+
 if [ "$1" == "install" ]; then
   shift # Remove command from argument list
   install_theme $@
@@ -113,5 +131,3 @@ elif [ "$1" == "replace" ]; then
   shift # Remove command from argument list
   replace_theme $1
 fi
-
-check_uplink_folder
