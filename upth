@@ -124,7 +124,7 @@ replace_theme() {
 
 if [ "$1" == "install" ]; then
   shift # Remove command from argument list
-  install_theme $@
+  install_theme $1
 elif [ "$1" == "restore" ]; then
   restore_theme
 elif [ "$1" == "replace" ]; then
