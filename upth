@@ -130,6 +130,9 @@ elif [ "$1" == "restore" ]; then
 elif [ "$1" == "replace" ]; then
   shift # Remove command from argument list
   replace_theme $1
+elif [ "$1" == "rebuild" ]; then
+  path=$(dirname $(readlink $0))
+  bash ${path}/list
 else
   echo "I don't understand what you want.";
   exit 1
