@@ -1,0 +1,17 @@
+root=$(pwd)/graphics
+files=$(ls -p $root | grep -v /)
+for f in $files
+do
+  echo $f
+done
+
+dirs=$(ls -p $root | grep /)
+
+for d in $dirs
+do
+  fp=$root/$d
+  for dd in $(ls -1 $fp)
+  do
+    echo $d$dd
+  done
+done

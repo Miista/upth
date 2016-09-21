@@ -1,0 +1,117 @@
+# /bin/bash
+
+UPLINK=${HOME}/Library/Application\ Support/Uplink
+GRAPHICS=${UPLINK}/mods/graphics
+
+check_uplink_folder() {
+  if [ ! -d "$UPLINK"  ];
+    then echo "Uplink folder does not exist";
+    exit 1;
+  fi
+}
+
+check_mods_folder() {
+  if [ ! -d "$GRAPHICS"  ];
+    then echo "Graphics folder does not exist";
+    exit 1;
+  fi
+}
+
+# {{{ Ask
+ask() {
+    # http://djm.me/ask
+    local prompt default REPLY
+
+    while true; do
+
+        if [ "${2:-}" = "Y" ]; then
+            prompt="Y/n"
+            default=Y
+        elif [ "${2:-}" = "N" ]; then
+            prompt="y/N"
+            default=N
+        else
+            prompt="y/n"
+            default=
+        fi
+
+        # Ask the question (not using "read -p" as it uses stderr not stdout)
+        echo -n "$1 [$prompt] "
+
+        # Read the answer (use /dev/tty in case stdin is redirected from somewhere else)
+        read REPLY </dev/tty
+
+        # Default?
+        if [ -z "$REPLY" ]; then
+            REPLY=$default
+        fi
+
+        # Check if the reply is valid
+        case "$REPLY" in
+            Y*|y*) return 0 ;;
+            N*|n*) return 1 ;;
+        esac
+
+    done
+}
+# }}}
+
+install_theme() {
+  if [ -f "$GRAPHICS/theme.txt" ]; then
+    echo "Another theme already installed. Use replace instead.";
+    exit 1
+  fi
+
+  if confirm_location $1; then
+    silent_install $1;
+    echo "Theme installed!"
+    exit 0
+  fi
+}
+
+silent_install() {
+  loc=$1/*
+  cp -nR $loc /Users/palmund/Library/Application\ Support/Uplink/mods/graphics
+}
+
+confirm_location() {
+  echo "Install from here: $1"
+  ask "Confirm" Y; # Default to YES
+}
+
+restore_theme() {
+  paths=$(pwd)/paths.txt
+  files=$(cat $paths)
+  for f in $files
+  do
+    if [ -f "$GRAPHICS/$f" ]; then
+      file="$GRAPHICS"/$f
+      rm "$file"
+    fi
+  done
+
+  echo "Default theme restored!"
+}
+
+replace_theme() {
+  if [ ! -f "$GRAPHICS/theme.txt" ]; then
+    echo "No theme installed to replace. Use install instead.";
+    exit 0
+  fi
+
+  if confirm_location $1; then
+    restore_theme && silent_install $1
+  fi
+}
+
+if [ "$1" == "install" ]; then
+  shift # Remove command from argument list
+  install_theme $@
+elif [ "$1" == "restore" ]; then
+  restore_theme
+elif [ "$1" == "replace" ]; then
+  shift # Remove command from argument list
+  replace_theme $1
+fi
+
+check_uplink_folder
