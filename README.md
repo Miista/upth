@@ -3,6 +3,17 @@
 
 This tool assumes that Uplink has been installed using Steam.
 
+## Installation
+
+To install this tool, simply clone this repository, navigate to the folder, and run the below command.
+
+    ln -s $(pwd)/upth /usr/local/bin/upth
+
+This will symlink the `upth` file into your `PATH`, making it available on the commandline.
+Then proceed as below.
+
+If the file for some reason is not executable, try running `chmod +x upth`.
+
 ## Commands/Usage
 
 ### Install
