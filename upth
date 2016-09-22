@@ -112,13 +112,11 @@ confirm_location() {
 # {{{ Restore
 
 restore_theme() {
-  paths=$PWD/paths.txt # Read the paths to be deleted
-  files=$(cat $paths)
-  for f in $files
+  paths=$(cat $PWD/paths.txt) # Read the paths to be deleted
+  for p in $paths
   do
-    if [ -f "$GRAPHICS/$f" ]; then
-      file="$GRAPHICS"/$f
-      rm "$file"
+    if [ -f "$GRAPHICS/$p" ]; then
+      rm "$GRAPHICS"/$p
     fi
   done
 
