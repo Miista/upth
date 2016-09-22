@@ -112,7 +112,7 @@ confirm_location() {
 # {{{ Restore
 
 restore_theme() {
-  paths=$(pwd)/paths.txt
+  paths=$PWD/paths.txt # Read the paths to be deleted
   files=$(cat $paths)
   for f in $files
   do
@@ -146,6 +146,8 @@ check_uplink_folder &&
   check_mods_folder &&
   check_symlinks;
 
+PWD=$(dirname $(readlink $0)) # Get the path for where this script is located
+
 if [ "$1" == "install" ]; then
   shift # Remove command from argument list
   install_theme $1
@@ -155,8 +157,7 @@ elif [ "$1" == "replace" ]; then
   shift # Remove command from argument list
   replace_theme $1
 elif [ "$1" == "rebuild" ]; then
-  path=$(dirname $(readlink $0))
-  bash ${path}/list
+  bash $PWD/list
 else
   echo "I don't understand what you want.";
   exit 1
