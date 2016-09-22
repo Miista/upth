@@ -1,9 +1,29 @@
 # !/bin/bash
 
 UPLINK=${HOME}/Library/Application\ Support/Uplink
+MODS=${UPLINK}/mods
 GRAPHICS=${UPLINK}/mods/graphics
+STEAM=${HOME}/Library/Application\ Support/Steam/steamapps/common/Uplink/Uplink.app/Contents/Resources/
 
 # {{{ Checks
+
+function check_symlinks() {
+  if [ ! -L "$STEAM"/data ]; then
+    ln -s "$MODS"/data/ "$STEAM"
+  fi
+
+  if [ ! -L "$STEAM"/graphics ]; then
+    ln -s "$MODS"/graphics/ "$STEAM"
+  fi
+
+  if [ ! -L "$STEAM"/sounds ]; then
+    ln -s "$MODS"/sounds/ "$STEAM"
+  fi
+
+  if [ ! -L "$STEAM"/music ]; then
+    ln -s "$MODS"/music/ "$STEAM"
+  fi
+}
 
 function check_uplink_folder() {
   if [ ! -d "$UPLINK"  ];
@@ -121,6 +141,10 @@ replace_theme() {
 }
 
 # }}}
+
+check_uplink_folder &&
+  check_mods_folder &&
+  check_symlinks;
 
 if [ "$1" == "install" ]; then
   shift # Remove command from argument list
