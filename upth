@@ -91,9 +91,8 @@ install_theme() {
   fi
 
   if confirm_location $1; then
-    silent_install $1;
-    echo "Theme installed!"
-    exit 0
+    silent_install $1
+    return 0
   fi
 }
 
@@ -149,8 +148,6 @@ restore_theme() {
       rm "$GRAPHICS"/$p
     fi
   done
-
-  echo "Default theme restored!"
 }
 
 # }}}
@@ -166,6 +163,8 @@ replace_theme() {
   if confirm_location $1; then
     restore_theme && silent_install $1
   fi
+
+  return 0
 }
 
 # }}}
@@ -178,12 +177,15 @@ PWD=$(dirname $(readlink $0)) # Get the path for where this script is located
 
 if [ "$1" == "install" ]; then
   shift # Remove command from argument list
-  install_theme $1
+  install_theme $1 && 
+    echo "Theme installed!"
 elif [ "$1" == "restore" ]; then
-  restore_theme
+  restore_theme && 
+    echo "Default theme restored!"
 elif [ "$1" == "replace" ]; then
   shift # Remove command from argument list
-  replace_theme $1
+  replace_theme $1 && 
+    echo "Theme replaced!"
 elif [ "$1" == "rebuild" ]; then
   list_paths
   # bash $PWD/list
