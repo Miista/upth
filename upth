@@ -162,6 +162,8 @@ replace_theme() {
 
   if confirm_location $1; then
     restore_theme && silent_install $1
+  else
+    return 1
   fi
 
   return 0
