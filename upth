@@ -111,9 +111,39 @@ confirm_location() {
 
 # {{{ Restore
 
+function list_paths() {
+  # This script will extract the file graphics.dat from Uplink.app
+  # Then go through all make a note of all the files that make up the default theme.
+
+  tmp_dir=$(mktemp -d)
+  path="$STEAM"/graphics.dat
+  unzip -q "$path" -d $tmp_dir
+
+  root=$tmp_dir/graphics
+
+  # Note the individual files in the root
+  files=$(ls -p $root | grep -v /)
+  for f in $files
+  do
+    echo $f
+  done
+
+  # Note the directories (and the files in them)
+  dirs=$(ls -p $root | grep /)
+  for dir in $dirs
+  do
+    for subdir in $(ls -1 "$root/$dir")
+    do
+      echo $dir$subdir
+    done
+  done
+
+  # Remove our temporary folder now that we're done
+  rm -rf $tmp_dir
+}
+
 restore_theme() {
-  paths=$(cat $PWD/paths.txt) # Read the paths to be deleted
-  for p in $paths
+  for p in $(list_paths)
   do
     if [ -f "$GRAPHICS/$p" ]; then
       rm "$GRAPHICS"/$p
@@ -155,7 +185,8 @@ elif [ "$1" == "replace" ]; then
   shift # Remove command from argument list
   replace_theme $1
 elif [ "$1" == "rebuild" ]; then
-  bash $PWD/list
+  list_paths
+  # bash $PWD/list
 else
   echo "I don't understand what you want.";
   exit 1
