@@ -68,6 +68,6 @@ Along with copying `theme.txt` this will make Uplink use the new theme instead o
 
 Invoking `restore`, the tool will delete theme files at location #1, making Uplink fall back to the default theme files.
 The files deleted are according to a list of filenames, that make up the default theme.
-For the curious ones, the list is located in `paths.txt`.
+For the curious ones, the list can be seen by invoking `upth rebuild`.
 
 Invoking `replace` consists of first calling `restore` and then `install`.
