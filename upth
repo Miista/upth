@@ -1,4 +1,4 @@
-# !/bin/bash
+# !/bin/zsh
 
 UPLINK=${HOME}/Library/Application\ Support/Uplink
 MODS=${UPLINK}/mods
